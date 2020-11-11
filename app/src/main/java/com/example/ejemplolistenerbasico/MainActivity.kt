@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -48,9 +49,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonRemove.setOnClickListener {
-            var numero : Int =  Integer.valueOf(textViewNumber.text.toString())
+            var numero : Int = Integer.valueOf(textViewNumber.text.toString())
             numero--
-            textViewNumber.text = numero.toString()
+            if (numero>=0)
+                textViewNumber.text = numero.toString()
+            else
+                Toast.makeText(this,"El número no puede ser negativo",Toast.LENGTH_LONG).show()
         }
         editTextNumero.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
@@ -70,8 +74,14 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 s?.let {
-                    if (it.isNotEmpty())
+                    if (it.isNotEmpty() && it.toString().toInt()>=0)
                         textViewNumber.text = it
+                    else if (it.isNotEmpty() && it.toString().toInt()<0)
+                        Toast.makeText(this@MainActivity,"El número para el textView no puede ser negativo",Toast.LENGTH_LONG).show()
+                    else if (it.isEmpty()){
+                        Toast.makeText(this@MainActivity,"El número del editText textView no puede quedar vacío",Toast.LENGTH_LONG).show()
+                        editTextNumero.text = textViewNumber.text as Editable?
+                    }
                 }
             }
         })
